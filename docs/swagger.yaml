@@ -1,0 +1,5049 @@
+---
+swagger: "2.0"
+info:
+  version: "1.0"
+  title: "ArvanCloud ECC Service"
+  x-logo:
+    url: "/images/other/arvan-api-docs-logo.svg"
+    backgroundColor: "white"
+    altText: "arvancloud"
+host: "napi.arvancloud.com"
+basePath: "/ecc/v1"
+schemes:
+- "https"
+paths:
+  /regions/{region}/float-ips:
+    get:
+      tags:
+      - "Float IPs"
+      summary: "List of all Float IPs."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of all float IPs"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "List of all Float IPs."
+                items:
+                  $ref: "#/definitions/floatIP"
+    post:
+      tags:
+      - "Float IPs"
+      summary: "Create new Float IP."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "description"
+          properties:
+            description:
+              type: "string"
+              description: "Float IP description."
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Details of the new float-ip"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                description: "Create new Float IP."
+                $ref: "#/definitions/floatIP"
+  /regions/{region}/float-ips/{id}:
+    delete:
+      tags:
+      - "Float IPs"
+      summary: "Delete Float IP."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the float-ip"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "float-ip deleted successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+  /regions/{region}/float-ips/{id}/attach:
+    patch:
+      tags:
+      - "Float IPs"
+      summary: "Attach a Float IP to a Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Float IP ID."
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "port_id"
+          - "server_id"
+          - "subnet_id"
+          properties:
+            server_id:
+              type: "string"
+              description: "Server UUID"
+            subnet_id:
+              type: "string"
+              description: "Subnet UUID"
+            port_id:
+              type: "string"
+              description: "Port UUID"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "float-ip attached successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+  /regions/{region}/float-ips/detach:
+    patch:
+      tags:
+      - "Float IPs"
+      summary: "Detach a Float IP from a Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "port_id"
+          properties:
+            port_id:
+              type: "string"
+              description: "Port UUID"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "float-ip detached successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+  /regions/{region}/images:
+    get:
+      tags:
+      - "Images"
+      summary: "List of all Images."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "type"
+        in: "query"
+        description: "Image type; server, snapshot or distributions"
+        required: false
+        type: "string"
+        enum:
+        - "server"
+        - "snapshot"
+        - "distributions"
+        x-exportParamName: "Type_"
+        x-optionalDataType: "String"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of snapshots"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "List of all Images."
+                items:
+                  $ref: "#/definitions/serverSnapshot"
+    post:
+      tags:
+      - "Images"
+      summary: "Request a new upload Image. See https://tus.io/ for more detail."
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "tus-resumable"
+        in: "header"
+        description: "version of tus.io"
+        required: true
+        type: "string"
+        default: "1.0.0"
+        enum:
+        - "1.0.0"
+        x-exportParamName: "TusResumable"
+      - name: "upload-length"
+        in: "header"
+        description: "To indicate the size of entire upload in bytes"
+        required: true
+        type: "integer"
+        x-exportParamName: "UploadLength"
+      - name: "upload-metadata"
+        in: "header"
+        description: "To add additional metadata to the upload creation request. *\
+          \ MUST contain 'filename', 'filetype' and 'data'. From all available fields\
+          \ only these two fields will be used. * MUST consist of one or more comma-separated\
+          \ key-value pairs. * The key and value MUST be separated by a space. * The\
+          \ key MUST NOT contain spaces and commas and MUST NOT be empty. * The key\
+          \ SHOULD be ASCII encoded and the value MUST be Base64 encoded. * Data key\
+          \ SHOULD base64 encoded of a json variables from 'name', 'disk_format',\
+          \ 'min_disk' and 'min_ram'"
+        required: true
+        type: "string"
+        x-exportParamName: "UploadMetadata"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Image upload created successfully"
+        "400":
+          description: "No file name specified"
+        "413":
+          description: "Image is too large"
+  /regions/{region}/images/{file}:
+    head:
+      tags:
+      - "Images"
+      summary: "Get upload offset. See https://tus.io/ for more detail."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "file"
+        in: "path"
+        description: "The Id of file"
+        required: true
+        type: "string"
+        x-exportParamName: "File"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Return image upload offset"
+        "404":
+          description: "Image not found"
+    delete:
+      tags:
+      - "Images"
+      summary: "Delete an Image."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "file"
+        in: "path"
+        description: "The ID of the image"
+        required: true
+        type: "string"
+        x-exportParamName: "File"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Delete an image"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+    patch:
+      tags:
+      - "Images"
+      summary: "Upload and apply bytes to a Image file. See https://tus.io/ for more\
+        \ detail."
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "file"
+        in: "path"
+        description: "The Id of file"
+        required: true
+        type: "string"
+        x-exportParamName: "File"
+      - name: "tus-resumable"
+        in: "header"
+        description: "version of tus.io"
+        required: true
+        type: "string"
+        default: "1.0.0"
+        enum:
+        - "1.0.0"
+        x-exportParamName: "TusResumable"
+      - name: "upload-offset"
+        in: "header"
+        description: "request and response header indicates a byte offset within a\
+          \ resource. * For uploading entire file in one request, set this to '0'"
+        required: true
+        type: "integer"
+        default: 0
+        x-exportParamName: "UploadOffset"
+      - name: "Content-Type"
+        in: "header"
+        description: "Request content type"
+        required: true
+        type: "string"
+        default: "application/offset+octet-stream"
+        enum:
+        - "application/offset+octet-stream"
+        x-exportParamName: "ContentType"
+      security:
+      - api_key: []
+      responses:
+        "204":
+          description: "Acknowledge successful upload and apply bytes to image"
+        "404":
+          description: "Image not found"
+        "415":
+          description: "Unsupported Media Type (Content-Type header must be application/offset+octet-stream)"
+  /regions/{region}/images/import:
+    post:
+      tags:
+      - "Images"
+      summary: "Import image from url."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          - "url"
+          properties:
+            name:
+              type: "string"
+              example: "Image name"
+              description: "Name"
+            url:
+              type: "string"
+              description: "Image url"
+            minDisk:
+              type: "integer"
+              description: "Minimum disk required for creating server with this image"
+            minRam:
+              type: "integer"
+              description: "Minimum ram required for creating server with this image"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Image upload request from URL receieved successfully."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "Image upload request from URL is proccessing."
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+  /regions/{region}/images/marketplace:
+    get:
+      tags:
+      - "Images"
+      summary: "List of all MarketPlace Items."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of marketplace items"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "List of all MarketPlace Items."
+                items:
+                  $ref: "#/definitions/marketPlaceItem"
+  /regions/{region}/networks:
+    get:
+      tags:
+      - "Networks"
+      summary: "List of Networks and details."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of networks"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "List of Networks and details."
+                items:
+                  $ref: "#/definitions/network"
+  /regions/{region}/networks/{id}/attach:
+    patch:
+      tags:
+      - "Networks"
+      summary: "Attach a Network to a Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Network ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "server_id"
+          properties:
+            server_id:
+              type: "string"
+              example: "321f48f0-f8b7-22af-b721-4fc668c2b6da"
+              description: "Server ID"
+            ip:
+              type: "string"
+              example: "192.168.1.10"
+              description: "IP we want to assign to server in network"
+            enablePortSecurity:
+              type: "boolean"
+              example: false
+              description: "Enable port security"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Network attached successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+        "409":
+          description: "Network attachment conflict"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+  /regions/{region}/networks/{id}/detach:
+    patch:
+      tags:
+      - "Networks"
+      summary: "Detach a Network from a Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Port ID(you can get this from networks api)"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "server_id"
+          properties:
+            server_id:
+              type: "string"
+              description: "Server ID"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Network detached successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+  /regions/{region}/ports/{id}/enable:
+    patch:
+      tags:
+      - "Ports"
+      summary: "Enable port."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Port ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Port enabled successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+        "404":
+          description: "Port not found"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+  /regions/{region}/ports/{id}/disable:
+    patch:
+      tags:
+      - "Ports"
+      summary: "Disable port."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Port ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Port disabled successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+        "404":
+          description: "Port not found"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+  /regions/{region}/quota:
+    get:
+      tags:
+      - "Quota"
+      summary: "List of limits for the account."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Return list of all limits for the account"
+          schema:
+            type: "object"
+            properties:
+              data:
+                description: "List of limits for the account."
+                $ref: "#/definitions/quota"
+  /regions/{region}/ptr:
+    post:
+      tags:
+      - "Ptr"
+      summary: "Add PTR record"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "domain"
+          - "ip"
+          properties:
+            ip:
+              type: "string"
+              description: "Public IP Address"
+            domain:
+              type: "string"
+              description: "Domain name"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "PTR Record created."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+        "400":
+          description: "Error"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "404":
+          description: "PTR not found"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "409":
+          description: "PTR conflict error"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+  /regions/{region}/ptr/{ip}:
+    delete:
+      tags:
+      - "Ptr"
+      summary: "Delete PTR record"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "ip"
+        in: "path"
+        description: "Public IP Address"
+        required: true
+        type: "string"
+        x-exportParamName: "Ip"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "PTR Record deleted."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+        "400":
+          description: "PTR Record error in delete."
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "404":
+          description: "PTR Record not found."
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+  /regions:
+    get:
+      tags:
+      - "Regions"
+      summary: "List of all regions."
+      produces:
+      - "application/json"
+      parameters: []
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of all regions"
+          schema:
+            type: "object"
+            properties:
+              data:
+                description: "List of all regions."
+                $ref: "#/definitions/region"
+  /regions/{region}/reports/{id}:
+    get:
+      tags:
+      - "Reports"
+      summary: "List of all resource reports of a server."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The server id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - name: "period"
+        in: "query"
+        description: "Report period (It can be hour or day and is displayed with 'h'\
+          \ or 'd')"
+        required: false
+        type: "string"
+        default: "1h"
+        x-exportParamName: "Period"
+        x-optionalDataType: "String"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of all type resources of a server."
+  /regions/{region}/reports/{id}/{metric}:
+    get:
+      tags:
+      - "Reports"
+      summary: "List of reports of a server for a special metric."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The server id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - name: "period"
+        in: "query"
+        description: "Report period (It can be hour or day which is displayed with\
+          \ 'h' or 'd')"
+        required: false
+        type: "string"
+        default: "1h"
+        x-exportParamName: "Period"
+        x-optionalDataType: "String"
+      - name: "metric"
+        in: "path"
+        description: "The report metric"
+        required: true
+        type: "string"
+        enum:
+        - "cpu"
+        - "ram"
+        - "network"
+        - "disk"
+        x-exportParamName: "Metric"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of all type resources"
+  /regions/{region}/ssh-keys/:
+    get:
+      tags:
+      - "SSH Keys"
+      summary: "List of all SSH Keys."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of all SSH Keys"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "List of all SSH Keys."
+                items:
+                  $ref: "#/definitions/sshKey"
+  /regions/{region}/ssh-keys:
+    post:
+      tags:
+      - "SSH Keys"
+      summary: "Create new SSH Key."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          - "public_key"
+          properties:
+            name:
+              type: "string"
+              example: "Instance name"
+              description: "Name"
+            public_key:
+              type: "string"
+              description: "Public Key"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "SSH Key created successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "SSH Key created successfully"
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+  /regions/{region}/ssh-keys/{name}:
+    delete:
+      tags:
+      - "SSH Keys"
+      summary: "Delete SSH Key."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "name"
+        in: "path"
+        description: "The name of the SSH Key"
+        required: true
+        type: "string"
+        x-exportParamName: "Name"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "SSH key deleted successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "SSh key deleted successfully"
+  /regions/{region}/securities:
+    get:
+      tags:
+      - "Security Group"
+      summary: "List of Security Group and Rules."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of all security groups"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "List of Security Group and Rules."
+                items:
+                  $ref: "#/definitions/securityGroup"
+    post:
+      tags:
+      - "Security Group"
+      summary: "Create new Security Group."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "description"
+          - "name"
+          properties:
+            name:
+              type: "string"
+              example: "arDefault"
+              description: "Security Group name"
+            description:
+              type: "string"
+              description: "Security Group description."
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Details of the new Security Group"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                description: "Create new Security Group."
+                $ref: "#/definitions/securityGroup"
+  /regions/{region}/securities/{id}:
+    delete:
+      tags:
+      - "Security Group"
+      summary: "Delete the Security Group."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the Security Group"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Security group deleted successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+        "403":
+          description: "Security group deletion is forbidden"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+  /regions/{region}/securities/security-rules/{id}:
+    get:
+      tags:
+      - "Security Group"
+      summary: "List of all Rules for a Security Groups."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the Security Group"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of all rules for the security group"
+          schema:
+            type: "object"
+            properties:
+              data:
+                description: "List of all Rules for a Security Groups."
+                $ref: "#/definitions/securityGroup"
+    post:
+      tags:
+      - "Security Group"
+      summary: "Create new Rule for a Security Group."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the Security Group"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "description"
+          - "direction"
+          - "ips"
+          - "protocol"
+          properties:
+            direction:
+              type: "string"
+              description: "Direction of rule"
+              enum:
+              - "ingress"
+              - "egress"
+            port_from:
+              type: "string"
+              description: "Port from value(If the rule is for one port, just fill\
+                \ this field with that port)"
+            port_to:
+              type: "string"
+              description: "Port to value(If the rule is for all ports, leave port_from\
+                \ and port_to empty)"
+            protocol:
+              type: "string"
+              description: "Protocol"
+            ips:
+              type: "array"
+              description: "List of ips, ['any'] for all ips"
+              items:
+                type: "string"
+                description: "IP address with subnet"
+            description:
+              type: "string"
+              description: "Security Group rule description"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Details of the new Security Group"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+        "403":
+          description: "Adding rules to the specified group is forbidden"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+    delete:
+      tags:
+      - "Security Group"
+      summary: "Delete Security Group Rule."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the Security Group Rule"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Security group rule deleted successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+  /regions/{region}/securities/cdn:
+    post:
+      tags:
+      - "Security Group"
+      summary: "Create CDN Security Group."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Details of the new Security Group"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+        "409":
+          description: "CDN security group already exists"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+  /regions/{region}/servers/{id}/actions:
+    get:
+      tags:
+      - "Server Actions"
+      summary: "Actions list of server."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "list of actions for a server"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "Actions list of server."
+                items:
+                  $ref: "#/definitions/serverAction"
+  /regions/{region}/servers/{id}/rename:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Rename the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          properties:
+            name:
+              type: "string"
+              description: "New name"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Rename server"
+  /regions/{region}/servers/{id}/power-off:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply shutdown action for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Shutdown server"
+  /regions/{region}/servers/{id}/power-on:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply turn on action for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Turn on server"
+  /regions/{region}/servers/{id}/reboot:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply soft reboot action for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Soft reboot server"
+  /regions/{region}/servers/{id}/hard-reboot:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply hard reboot action for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Hard reboot server"
+  /regions/{region}/servers/{id}/rescue:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply rescue action for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Rescue server"
+  /regions/{region}/servers/{id}/unrescue:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply unrescue action for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Unrescue server"
+  /regions/{region}/servers/{id}/rebuild:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply rebuild action for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "image_id"
+          properties:
+            image_id:
+              type: "string"
+              description: "Image ID"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Rebuild server"
+  /regions/{region}/servers/{id}/resize:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply new size plan for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "flavor_id"
+          properties:
+            flavor_id:
+              type: "string"
+              description: "Plan ID of server, you can get list of plan IDs of each\
+                \ region from sizes api"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Resize server"
+  /regions/{region}/servers/{id}/snapshot:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Create snapshot of the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          properties:
+            name:
+              type: "string"
+              description: "Name of snapshot"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Create snapshot of server"
+  /regions/{region}/servers/{id}/add-security-group:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Assign Server to Security Group."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "security_group_id"
+          properties:
+            security_group_id:
+              type: "string"
+              description: "Security group ID"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Assign server to security group"
+  /regions/{region}/servers/{id}/remove-security-group:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Remove the Server from the Security Group."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "security_group_id"
+          properties:
+            security_group_id:
+              type: "string"
+              description: "Security group ID"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Remove server to security group"
+  /regions/{region}/servers/{id}/change-public-ip:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "change public ips."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "Remove server to security group"
+  /regions/{region}/servers/{id}/reset-root-password:
+    post:
+      tags:
+      - "Server Actions"
+      summary: "Apply reset root password action for the Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "202":
+          description: "Root password changed"
+  /regions/{region}/servers:
+    get:
+      tags:
+      - "Servers"
+      summary: "Return all Servers."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Return list of servers in a region"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "Return all Servers."
+                items:
+                  $ref: "#/definitions/server"
+    post:
+      tags:
+      - "Servers"
+      summary: "Create new Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "flavor_id"
+          - "image_id"
+          - "key_name"
+          - "name"
+          - "network_id"
+          - "security_groups"
+          properties:
+            name:
+              type: "string"
+              example: "Instance name"
+              description: "Name"
+            network_id:
+              type: "string"
+              format: "uuid"
+              example: "39e66d2a-7au6-4be5-fgh5-82d2726698c1"
+              description: "Network ID of server"
+            flavor_id:
+              type: "string"
+              example: "ar-2-1-15"
+              description: "Plan ID of server, you can get list of plan IDs of each\
+                \ region from sizes api"
+            image_id:
+              type: "string"
+              format: "uuid"
+              example: "39e66d2a-7au6-4be5-fgh5-82d2726698c1"
+              description: "Image ID of server"
+            security_groups:
+              type: "array"
+              description: "Array of security group IDs of server"
+              items:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                    example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+                    description: "ID of security group"
+            ssh_key:
+              type: "boolean"
+              example: true
+              description: "Can use ssh key"
+            key_name:
+              type: "string"
+              description: "SSH Key name (for password: 0)"
+            count:
+              type: "integer"
+              example: 1
+              description: "Count of servers we want to create"
+            create_type:
+              type: "string"
+              description: "type of server creation, a flag which shows client sends\
+                \ arguments or we should read from image"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Server Created Successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                description: "Create new Server."
+                $ref: "#/definitions/server"
+        "402":
+          description: "Insufficient funds, payment required."
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "403":
+          description: "Currently it is not possible to create new Abarak in this\
+            \ region."
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+  /regions/{region}/options:
+    get:
+      tags:
+      - "Servers"
+      summary: "Return a region options."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Return options for a region"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                description: "Return a region options."
+                $ref: "#/definitions/options"
+  /regions/{region}/servers/{id}:
+    get:
+      tags:
+      - "Servers"
+      summary: "Shows details of a Server."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Show details of a server"
+          schema:
+            type: "object"
+            properties:
+              data:
+                description: "Shows details of a Server."
+                $ref: "#/definitions/server"
+    delete:
+      tags:
+      - "Servers"
+      summary: "Delete a Server."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - name: "forceDelete"
+        in: "query"
+        description: "Force delete"
+        required: false
+        type: "boolean"
+        default: false
+        enum:
+        - "true"
+        - "false"
+        x-exportParamName: "ForceDelete"
+        x-optionalDataType: "Bool"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Server deleted successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "Server deleted successfully"
+  /regions/{region}/servers/{id}/vnc:
+    get:
+      tags:
+      - "Server Actions"
+      summary: "Gets a VNC console for a Server."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the server"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "VNC link for connection to the server"
+  /regions/{region}/sizes:
+    get:
+      tags:
+      - "Sizes"
+      summary: "List of general plans."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of general plans"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "List of general plans."
+                items:
+                  $ref: "#/definitions/flavor"
+  /regions/{region}/size/{id}:
+    get:
+      tags:
+      - "Sizes"
+      summary: "Shows details of a flavor."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The size flavor id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Shows details of a flavor."
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "Shows details of a flavor."
+                items:
+                  $ref: "#/definitions/flavor"
+  /regions/{region}/sizes/custom:
+    get:
+      tags:
+      - "Sizes"
+      summary: "List of custom sizes."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Return list of all custom sizes"
+          schema:
+            type: "object"
+            properties:
+              data:
+                description: "List of custom sizes."
+                $ref: "#/definitions/customSize"
+  /regions/{region}/subnets/{id}:
+    get:
+      tags:
+      - "Networks"
+      summary: "Get Subnet details."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "ID of subnet"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of all subnet details"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "Get Subnet details."
+                items:
+                  $ref: "#/definitions/subnet"
+        "404":
+          description: "Subnet not found"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+    delete:
+      tags:
+      - "Networks"
+      summary: "Delete Subnet."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "ID of subnet"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Subnet deleted successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+    patch:
+      tags:
+      - "Networks"
+      summary: "Update the Subnet."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "ID of subnet"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "dhcp"
+          - "dns_servers"
+          - "enable_gateway"
+          - "name"
+          - "subnet_gateway"
+          - "subnet_ip"
+          properties:
+            name:
+              type: "string"
+              description: "Name of subnet"
+            subnet_ip:
+              type: "string"
+              description: "IP range of subnet"
+            enable_gateway:
+              type: "boolean"
+              description: "Whether to enable gateway for this subnet"
+            subnet_gateway:
+              type: "string"
+              description: "Gateway of subnet"
+            dhcp:
+              type: "string"
+              description: "DHCP range"
+            dns_servers:
+              type: "string"
+              description: "List of DNSes per line"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Subnet updated successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+  /regions/{region}/subnets:
+    post:
+      tags:
+      - "Networks"
+      summary: "Create new Subnet."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "dhcp"
+          - "dns_servers"
+          - "enable_gateway"
+          - "name"
+          - "subnet_gateway"
+          - "subnet_ip"
+          properties:
+            name:
+              type: "string"
+              description: "Name of subnet"
+            subnet_ip:
+              type: "string"
+              description: "IP range of subnet"
+            enable_gateway:
+              type: "boolean"
+              description: "Name of subnet"
+            subnet_gateway:
+              type: "string"
+              description: "Subnet of gateway"
+            dhcp:
+              type: "string"
+              description: "DHCP range"
+            dns_servers:
+              type: "string"
+              description: "List of DNSes per line"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Details of the new subnet"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                description: "Create new Subnet."
+                $ref: "#/definitions/subnet"
+  /regions/{region}/tags:
+    get:
+      tags:
+      - "Tags"
+      summary: "Return all user tags."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Return list of user's all tags"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "Return all user tags."
+                items:
+                  $ref: "#/definitions/tag"
+    post:
+      tags:
+      - "Tags"
+      summary: "Create a new tag for user."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "tag_name"
+          properties:
+            tag_name:
+              type: "string"
+              example: "Tag name"
+              description: "Tag name"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Tag created successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "Tag created successfully"
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+  /regions/{region}/tags/{id}:
+    put:
+      tags:
+      - "Tags"
+      summary: "Edit a tag."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Tag ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "tag_name"
+          properties:
+            tag_name:
+              type: "string"
+              example: "Tag name"
+              description: "Tag name"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Tag edited successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "Tag edited successfully"
+        "404":
+          description: "Tag not found"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+    delete:
+      tags:
+      - "Tags"
+      summary: "Delete a tag."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Tag ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Tag deleted successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "Tag deleted successfully"
+        "404":
+          description: "Tag not found"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "409":
+          description: "There are some instances attached to this tag"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+  /regions/{region}/tags/{id}/attach:
+    post:
+      tags:
+      - "Tags"
+      summary: "Attach tag to an instance"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Tag ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "instance_id"
+          - "instance_type"
+          properties:
+            instance_id:
+              type: "string"
+              example: "2cb0e42a-bb0a-0055-82ba-6aa2b0c65ccc"
+              description: "Instance ID"
+            instance_type:
+              type: "string"
+              example: "server"
+              description: "Instance Type"
+              enum:
+              - "server"
+              - "network"
+              - "image"
+              - "float_ip"
+              - "volume"
+              - "security_group"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Tag attached to instance successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "Tag attached to instance successfully"
+        "404":
+          description: "Tag not found"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+  /regions/{region}/tags/{id}/detach:
+    post:
+      tags:
+      - "Tags"
+      summary: "Detach tag from an instance"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "Tag ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "instance_id"
+          - "instance_type"
+          properties:
+            instance_id:
+              type: "string"
+              example: "2cb0e42a-bb0a-0055-82ba-6aa2b0c65ccc"
+              description: "Instance ID"
+            instance_type:
+              type: "string"
+              example: "server"
+              description: "Instance Type"
+              enum:
+              - "server"
+              - "network"
+              - "image"
+              - "float_ip"
+              - "volume"
+              - "security_group"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Tag detached from instance successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "Tag attached to instance successfully"
+        "404":
+          description: "Tag not found"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+  /regions/{region}/tags/batch:
+    post:
+      tags:
+      - "Tags"
+      summary: "Replace a list of tags with instance tags (for a list of instances)"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "instance_list"
+          - "instance_type"
+          - "tag_list"
+          properties:
+            instance_list:
+              type: "array"
+              description: "List of instance IDs"
+              items:
+                type: "string"
+                example: "2cb0e42a-bb0a-0055-82ba-6aa2b0c65ccc"
+            tag_list:
+              type: "array"
+              description: "List of tag names"
+              items:
+                type: "string"
+                example: "new tag"
+            instance_type:
+              type: "string"
+              example: "server"
+              description: "Instance Type"
+              enum:
+              - "server"
+              - "network"
+              - "image"
+              - "float_ip"
+              - "volume"
+              - "security_group"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Tag changes applied successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "Tag changes applied successfully"
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+  /regions/{region}/volumes:
+    get:
+      tags:
+      - "Volumes"
+      summary: "List of Volumes."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "List of volumes"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "List of Volumes."
+                items:
+                  $ref: "#/definitions/volume"
+    post:
+      tags:
+      - "Volumes"
+      summary: "Create new Volume."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          - "size"
+          properties:
+            name:
+              type: "string"
+              example: "my volume"
+              description: "Volume name"
+            size:
+              type: "integer"
+              example: 1
+              description: "The size of the volume, in gigabytes (GB)."
+            description:
+              type: "string"
+              example: "description of the volume"
+              description: "Volume description."
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "201":
+          description: "Volume created successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                description: "Create new Volume."
+                $ref: "#/definitions/volume"
+        "403":
+          description: "Currently it is not possible to create new volume."
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "array"
+                description: "//responses"
+                items:
+                  type: "string"
+        "422":
+          description: "Input is not validated"
+          schema:
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              errors:
+                type: "object"
+                description: "//responses"
+                properties:
+                  fieldName:
+                    type: "array"
+                    description: "//responses"
+                    items:
+                      type: "string"
+  /regions/{region}/volumes/detach:
+    patch:
+      tags:
+      - "Volumes"
+      summary: "Detach a Volume from a Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "server_id"
+          - "volume_id"
+          properties:
+            server_id:
+              type: "string"
+              example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+              description: "Server UUID"
+            volume_id:
+              type: "string"
+              example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+              description: "Volume UUID"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Volume detached successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+  /regions/{region}/volumes/attach:
+    patch:
+      tags:
+      - "Volumes"
+      summary: "Attach a Volume to a Server."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "server_id"
+          - "volume_id"
+          properties:
+            server_id:
+              type: "string"
+              example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+              description: "Server UUID"
+            volume_id:
+              type: "string"
+              example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+              description: "Volume UUID"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Volume attached successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+  /regions/{region}/volumes/limits:
+    get:
+      tags:
+      - "Volumes"
+      summary: "Show general limits of Volumes."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Volume limits"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "Show general limits of Volumes."
+                items:
+                  $ref: "#/definitions/volumeLimits"
+  /regions/{region}/volumes/{id}:
+    get:
+      tags:
+      - "Volumes"
+      summary: "Show details of a Volume."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the volume"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Volume details"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                description: "Show details of a Volume."
+                items:
+                  $ref: "#/definitions/volume"
+    delete:
+      tags:
+      - "Volumes"
+      summary: "Delete the Volume."
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the volume"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Volume deleted successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+    patch:
+      tags:
+      - "Volumes"
+      summary: "Update a Volume."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "region"
+        in: "path"
+        description: "Region code"
+        required: true
+        type: "string"
+        enum:
+        - "ir-thr-mn1"
+        - "ir-thr-at1"
+        - "nl-ams-su1"
+        x-exportParamName: "Region"
+      - name: "id"
+        in: "path"
+        description: "The ID of the volume"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        description: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "name"
+          properties:
+            name:
+              type: "string"
+              example: "new name"
+              description: "The new name of the volume"
+            description:
+              type: "string"
+              example: "my description"
+              description: "Optional description of the volume"
+        x-exportParamName: "Body"
+      security:
+      - api_key: []
+      responses:
+        "200":
+          description: "Volume updated successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                description: "//responses"
+              data:
+                type: "object"
+                description: "//responses"
+                properties: {}
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  options:
+    type: "object"
+    properties:
+      distributions:
+        type: "array"
+        description: "Distributions"
+        items:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+              example: "centos"
+              description: "//definitions"
+            images:
+              type: "array"
+              description: "All versions of distribution"
+              items:
+                $ref: "#/definitions/distribution"
+      initial_state:
+        type: "object"
+        description: "Default options"
+        properties:
+          image_id:
+            type: "string"
+            description: "Default image ID"
+          size_id:
+            type: "string"
+            example: "ar-4-2-25"
+            description: "Default flavor ID"
+          region_id:
+            type: "integer"
+            example: 1
+            description: "Default region ID"
+          currency:
+            type: "string"
+            example: "irr"
+            description: "Default currency"
+          requires_payment_method:
+            type: "boolean"
+            example: false
+            description: "//definitions"
+          droplet_count:
+            type: "integer"
+            example: 0
+            description: "//definitions"
+          droplet_limit:
+            type: "integer"
+            example: 5
+            description: "//definitions"
+      networks:
+        type: "array"
+        description: "User networks"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+              description: "Network ID"
+            name:
+              type: "string"
+              description: "Network name"
+            default:
+              type: "boolean"
+              example: true
+              description: "//definitions"
+            $isDisabled:
+              type: "boolean"
+              example: false
+              description: "//definitions"
+      qouta:
+        description: "List of limitations for account"
+        $ref: "#/definitions/serverQuota"
+      regions:
+        type: "array"
+        description: "List of all regions"
+        items:
+          $ref: "#/definitions/region"
+      security_groups:
+        type: "array"
+        description: "security groups of user"
+        items:
+          $ref: "#/definitions/securityGroup"
+      sizes:
+        type: "array"
+        description: "Flavor sizes"
+        items:
+          $ref: "#/definitions/flavor"
+      ssh_keys:
+        type: "array"
+        description: "SSH Keys"
+        items:
+          type: "object"
+          allOf:
+          - $ref: "#/definitions/sshKey"
+          - type: "object"
+            properties:
+              id:
+                type: "integer"
+                description: "SSH Key ID"
+              userId:
+                type: "string"
+                description: "SSH Key user ID"
+  sshKey:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "SSH Key name"
+      fingerprint:
+        type: "string"
+        description: "SSH Key fingerprint"
+      createdAt:
+        type: "string"
+        example: "2020-05-09T12:07:06Z"
+        description: "SSH Key creation date"
+  flavor:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "ar-2-1-15"
+        description: "Flavor ID"
+      name:
+        type: "string"
+        description: "Flavor name"
+      disk:
+        type: "integer"
+        description: "Flavor disk size"
+      disk_in_bytes:
+        type: "integer"
+        description: "Flavor disk size ib bytes"
+      memory:
+        type: "integer"
+        description: "Flavor memory size"
+      memory_in_bytes:
+        type: "integer"
+        description: "Flavor memory size in bytes"
+      bandwidth_in_bytes:
+        type: "integer"
+        description: "Flavor bandwidth size in bytes"
+      cpu_count:
+        type: "integer"
+        description: "Flavor cpu count"
+      type:
+        type: "string"
+        description: "Flavor category type"
+      sub_type:
+        type: "string"
+        description: "Flavor category sub type"
+      order:
+        type: "string"
+        description: "Flavor order"
+      price_per_hour:
+        type: "integer"
+        description: "Flavor price per hour"
+      price_per_month:
+        type: "integer"
+        description: "Flavor price per month"
+      "off":
+        type: "string"
+        description: "Flavor off"
+      off_price:
+        type: "string"
+        description: "Flavor off price"
+      cpu_share:
+        type: "string"
+        description: "Flavor cpu share"
+      iops_max_hdd:
+        type: "integer"
+        description: "Flavor iops max hdd"
+      iops_max_ssd:
+        type: "integer"
+        description: "Flavor iops max ssd"
+      pps:
+        type: "array"
+        description: "Flavor pps"
+        items:
+          type: "integer"
+  serverQuota:
+    type: "object"
+    properties:
+      maxImageMeta:
+        type: "integer"
+        description: "Max image meta"
+      maxPersonality:
+        type: "integer"
+        description: "Max personality"
+      maxPersonalitySize:
+        type: "integer"
+        description: "Max personality size"
+      maxSecurityGroupRules:
+        type: "integer"
+        description: "Max security group rules"
+      maxSecurityGroups:
+        type: "integer"
+        description: "Max security groups"
+      maxServerGroupMembers:
+        type: "integer"
+        description: "Max security group members"
+      maxServerGroups:
+        type: "integer"
+        description: "Max server groups"
+      maxServerMeta:
+        type: "integer"
+        description: "Max server meta"
+      maxTotalCores:
+        type: "integer"
+        description: "Max total cores"
+      maxTotalFloatingIps:
+        type: "integer"
+        description: "Max total floating IPs"
+      maxTotalInstances:
+        type: "integer"
+        description: "Max total Instances"
+      maxTotalKeypairs:
+        type: "integer"
+        description: "Max total key pairs"
+      maxTotalRAMSize:
+        type: "integer"
+        description: "Max total ram size"
+      totalCoresUsed:
+        type: "integer"
+        description: "Max total core used"
+      totalFloatingIpsUsed:
+        type: "integer"
+        description: "Max total floating ip used"
+      totalInstancesUsed:
+        type: "integer"
+        description: "Max total instances used"
+      totalRAMUsed:
+        type: "integer"
+        description: "Max total ram used"
+      totalSecurityGroupsUsed:
+        type: "integer"
+        description: "Max total security groups used"
+      totalServerGroupsUsed:
+        type: "integer"
+        description: "Max total server groups used"
+  quota:
+    type: "object"
+    properties:
+      max_image_meta:
+        type: "integer"
+        description: "Max image meta"
+      max_personality:
+        type: "integer"
+        description: "Max personality"
+      max_personality_size:
+        type: "integer"
+        description: "Max personality size"
+      max_security_group_rules:
+        type: "integer"
+        description: "Max security group rules"
+      max_security_groups:
+        type: "integer"
+        description: "Max security groups"
+      max_server_group_members:
+        type: "integer"
+        description: "Max security group members"
+      max_server_groups:
+        type: "integer"
+        description: "Max server groups"
+      max_server_meta:
+        type: "integer"
+        description: "Max server meta"
+      max_total_cores:
+        type: "integer"
+        description: "Max total cores"
+      max_total_floating_ips:
+        type: "integer"
+        description: "Max total floating IPs"
+      max_total_innstances:
+        type: "integer"
+        description: "Max total Instances"
+      max_total_keypairs:
+        type: "integer"
+        description: "Max total key pairs"
+      max_total_ram_size:
+        type: "integer"
+        description: "Max total ram size"
+      total_cores_used:
+        type: "integer"
+        description: "Max total core used"
+      total_floating_ip_used:
+        type: "integer"
+        description: "Max total floating ip used"
+      total_instances_used:
+        type: "integer"
+        description: "Max total instances used"
+      total_ram_used:
+        type: "integer"
+        description: "Max total ram used"
+      total_security_groups_used:
+        type: "integer"
+        description: "Max total security groups used"
+      total_server_groups_used:
+        type: "integer"
+        description: "Max total server groups used"
+  customSize:
+    type: "object"
+    properties:
+      currency:
+        type: "string"
+        example: "irr"
+        description: "Currency of prices"
+      customs:
+        type: "object"
+        description: "List of sizes available in custom size"
+        properties:
+          ram:
+            type: "array"
+            description: "List of available rams"
+            items:
+              type: "integer"
+          cpu:
+            type: "array"
+            description: "List of available cpus"
+            items:
+              type: "integer"
+          disk:
+            type: "array"
+            description: "List of available disks"
+            items:
+              type: "integer"
+      prices:
+        type: "object"
+        description: "List of plans prices"
+        properties:
+          plan_name:
+            type: "object"
+            description: "key is name of plan"
+            properties:
+              price_per_hour:
+                type: "integer"
+                description: "price of plan per hour"
+              price_per_month:
+                type: "integer"
+                description: "price of plan per month"
+      availableCpusForRam:
+        type: "object"
+        description: "Available cpu sizes for ram size"
+        properties: {}
+      availableRamsForCpu:
+        type: "object"
+        description: "Available ram sizes for cpu size"
+        properties: {}
+      availableDisksForRam:
+        type: "object"
+        description: "Available disk sizes for ram size"
+        properties: {}
+      availableDisksForCpu:
+        type: "object"
+        description: "Available disk sizes for cpu size"
+        properties: {}
+      availableCpusForDisk:
+        type: "object"
+        description: "Available cpu sizes for disk size"
+        properties: {}
+      availableRamsForDisk:
+        type: "object"
+        description: "Available ram sizes for disk size"
+        properties: {}
+  distribution:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "fe50ccba-233b-64e0-5192-a26aab5eb20a"
+        description: "Image ID of distribiution"
+      distribution_name:
+        type: "string"
+        example: "windows"
+        description: "Name of distribiution"
+      name:
+        type: "string"
+        description: "Version of distribiution"
+      type:
+        type: "string"
+        example: "private"
+        description: "Type of distribiution"
+      disk:
+        type: "integer"
+        example: 10
+        description: "Minimum disk required for server with this distribiution"
+      ram:
+        type: "integer"
+        example: 0
+        description: "Minimum ram required for server with this distribiution"
+      ssh_key:
+        type: "boolean"
+        example: true
+        description: "//definitions"
+      ssh_password:
+        type: "boolean"
+        example: false
+        description: "//definitions"
+      os_description:
+        type: "string"
+        description: "Description shown to user after server creation with this distribution."
+  server:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "5ef455d8-c89b-4208-849f-1b68dac01984"
+        description: "ID of server"
+      name:
+        type: "string"
+        example: "server name"
+        description: "name of server"
+      flavor:
+        description: "flavor of server"
+        $ref: "#/definitions/serverFlavor"
+      status:
+        description: "//definitions"
+        $ref: "#/definitions/serverStatus"
+      image:
+        description: "image of server"
+        $ref: "#/definitions/image"
+      created:
+        type: "string"
+        example: "2020-06-30T13:02:51Z"
+        description: "time server was created"
+      password:
+        type: "string"
+        description: "password of server"
+      task_state:
+        type: "string"
+        example: "rebuilding"
+        description: "task state of server if server is in the middle of a task"
+      key_name:
+        type: "string"
+        description: "The name of associated key pair, if any"
+      security_groups:
+        type: "array"
+        description: "security groups of server"
+        items:
+          $ref: "#/definitions/securityGroup"
+      tags:
+        type: "array"
+        description: "tags of server"
+        items:
+          $ref: "#/definitions/tag"
+      ar_next:
+        type: "string"
+        description: "//definitions"
+      addresses:
+        type: "object"
+        description: "network addresses of server"
+        properties:
+          network_name:
+            type: "array"
+            description: "the key is network name and value is the addreses of that\
+              \ network"
+            items:
+              type: "object"
+              properties:
+                mac_addr:
+                  type: "string"
+                  example: "00:1B:44:11:3A:B7"
+                  description: "mac address of server"
+                version:
+                  type: "integer"
+                  description: "IP version"
+                addr:
+                  type: "string"
+                  example: "192.168.1.205"
+                  description: "IP of server in that network"
+                type:
+                  type: "string"
+                  example: "fixed"
+                  description: "Type of IP in that network"
+  serverFlavor:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "Flavor ID"
+      name:
+        type: "string"
+        description: "Flavor name"
+      disk:
+        type: "integer"
+        description: "Flavor disk size"
+      ram:
+        type: "integer"
+        description: "Flavor ram size"
+      swap:
+        type: "string"
+        description: "Flavor swap size"
+      vcpus:
+        type: "integer"
+        description: "Flavor cpus"
+  image:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "Image ID"
+      name:
+        type: "string"
+        description: "Image name"
+      min_disk:
+        type: "integer"
+        description: "Image minimum disk required"
+      min_ram:
+        type: "integer"
+        description: "Image minimum ram required"
+      os:
+        type: "string"
+        description: "Image operating system"
+      os_version:
+        type: "string"
+        description: "Image OS version"
+      progress:
+        type: "integer"
+        description: "Image progress"
+      size:
+        type: "integer"
+        description: "Image size"
+      status:
+        type: "string"
+        example: "BUILD"
+        description: "Image current status"
+      created:
+        type: "string"
+        example: "2018-09-14T06:47:08Z"
+        description: "Creation time of image"
+      username:
+        type: "string"
+        description: "Image login username"
+      metadata:
+        description: "Image metadata"
+        $ref: "#/definitions/imageMetaData"
+      documents:
+        type: "array"
+        description: "Image documents"
+        items:
+          $ref: "#/definitions/imageDocument"
+      tags:
+        type: "array"
+        description: "list of image tags"
+        items:
+          $ref: "#/definitions/tag"
+  imageDocument:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Document name"
+        description: "Document name"
+      link:
+        type: "string"
+        example: "https://www.arvancloud.com/docs/"
+        description: "Document link"
+  imageMetaData:
+    type: "object"
+    properties:
+      ar_visibility:
+        type: "string"
+        example: "1"
+        description: "Image visibility"
+      hw_disk_bus:
+        type: "string"
+        description: "Specifies the type of disk controller to attach disk devices\
+          \ to"
+      hw_qemu_guest_agent:
+        type: "string"
+        description: "image guest agent support"
+      os:
+        type: "string"
+        example: "ubuntu"
+        description: "Image operating system"
+      os_type:
+        type: "string"
+        example: "linux"
+        description: "OS type of image"
+      os_version:
+        type: "string"
+        example: "16.04"
+        description: "OS version of image"
+      real_size:
+        type: "string"
+        example: "2361393152"
+        description: "Real size of image which is counted in bytes"
+      ssh_key:
+        type: "string"
+        example: "1"
+        description: "Can use ssh key"
+      ssh_password:
+        type: "string"
+        example: "1"
+        description: "Can use ssh password"
+      username:
+        type: "string"
+        description: "Image login username"
+  securityGroup:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "6b84335a-5522-4aa2-2280-da17c40cf293"
+        description: "ID of security group"
+      name:
+        type: "string"
+        description: "name of security group"
+      description:
+        type: "string"
+        example: "ArvanCloud Default Security Group"
+        description: "description about security group"
+      real_name:
+        type: "string"
+        description: "Real name of security group"
+      read_only:
+        type: "boolean"
+        description: "Security group is read only"
+      abraks:
+        type: "array"
+        description: "Instances with this security group"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+              description: "Instance ID"
+            name:
+              type: "string"
+              description: "Instance name"
+      rules:
+        type: "array"
+        description: "rules of security group"
+        items:
+          $ref: "#/definitions/securityGroupRule"
+      tags:
+        type: "array"
+        description: "list of security group tags"
+        items:
+          $ref: "#/definitions/tag"
+  securityGroupRule:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "6b84335a-5522-4aa2-2280-da17c40cf293"
+        description: "ID of security group rule"
+      group_id:
+        type: "string"
+        example: "6b84335a-5522-4aa2-2280-da17c40cf293"
+        description: "group id of security group rule"
+      description:
+        type: "string"
+        description: "description about security group rule"
+      ip:
+        type: "string"
+        description: "The remote IP prefix to be associated with this security group\
+          \ rule. "
+      port_end:
+        type: "integer"
+        example: 22
+        description: "The maximum port number in the range that is matched by the\
+          \ securitygroup rule."
+      port_start:
+        type: "integer"
+        example: 22
+        description: "The minimum port number in the range that is matched by the\
+          \ security group rule."
+      protocol:
+        type: "string"
+        example: "tcp"
+        description: "The protocol that is matched by the security group rule"
+      direction:
+        type: "string"
+        description: "The direction in which the security group rule is applied(ingress\
+          \ or egress)"
+      ether_type:
+        type: "string"
+        example: "IPV4"
+        description: "IPV4 or IPV6"
+      created_at:
+        type: "string"
+        description: "Rule creation time"
+      updated_at:
+        type: "string"
+        description: "Rule update time"
+  serverSecurityGroup:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+        description: "ID of security group"
+  region:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+        example: "ir-thr-mn1"
+        description: "Code of region"
+      dc:
+        type: "string"
+        example: "Mobinnet"
+        description: "Data center name of region"
+      dc_code:
+        type: "string"
+        example: "mn"
+        description: "Data center code of region"
+      country:
+        type: "string"
+        example: "Iran"
+        description: "Country of region"
+      city:
+        type: "string"
+        example: "Tehran"
+        description: "City of region"
+      city_code:
+        type: "string"
+        example: "thr"
+        description: "City code of region"
+      flag:
+        type: "string"
+        example: "ir"
+        description: "Flag of country of region"
+      create:
+        type: "boolean"
+        example: true
+        description: "If server can be created in this region or not"
+      default:
+        type: "boolean"
+        example: true
+        description: "If this region is the default selected region"
+      visible:
+        type: "boolean"
+        example: true
+        description: "Visibility of Region"
+      soon:
+        type: "boolean"
+        example: true
+        description: "//definitions"
+  volumeStatus:
+    type: "string"
+    description: "The status of the volume"
+    example: "creating"
+    enum:
+    - "creating"
+    - "available"
+    - "reserved"
+    - "attaching"
+    - "detaching"
+    - "in-use"
+    - "maintenance"
+    - "deleting"
+    - "awaiting-transfer"
+    - "error"
+    - "error_deleting"
+    - "backing-up"
+    - "restoring-backup"
+    - "error_backing-up"
+    - "error_restoring"
+    - "error_extending"
+    - "downloading"
+    - "uploading"
+    - "retyping"
+    - "extending"
+  serverStatus:
+    type: "string"
+    description: "The status of the server"
+    example: "ACTIVE"
+    enum:
+    - "ACTIVE"
+    - "BUILD"
+    - "DELETED"
+    - "ERROR"
+    - "HARD_REBOOT"
+    - "MIGRATING"
+    - "PASSWORD"
+    - "PAUSED"
+    - "REBOOT"
+    - "REBUILD"
+    - "RESCUE"
+    - "RESIZE"
+    - "REVERT_RESIZE"
+    - "SHELVED"
+    - "SHELVED_OFFLOADED"
+    - "SHUTOFF"
+    - "SOFT_DELETED"
+    - "SUSPENDED"
+    - "UNKNOWN"
+    - "VERIFY_RESIZE"
+  volumeLimits:
+    type: "object"
+    properties:
+      total_snapshots_used:
+        type: "integer"
+        example: 0
+        description: "//definitions"
+      max_total_backups:
+        type: "integer"
+        example: 3
+        description: "//definitions"
+      max_total_volume_gigabytes:
+        type: "integer"
+        example: 100
+        description: "//definitions"
+      max_total_snapshots:
+        type: "integer"
+        example: 10
+        description: "//definitions"
+      max_total_backup_gigabytes:
+        type: "integer"
+        example: 10
+        description: "//definitions"
+      total_backup_gigabytes_used:
+        type: "integer"
+        example: 10
+        description: "//definitions"
+      max_total_volumes:
+        type: "integer"
+        example: 10
+        description: "//definitions"
+      total_volumes_used:
+        type: "integer"
+        example: 10
+        description: "//definitions"
+      total_backups_used:
+        type: "integer"
+        example: 10
+        description: "//definitions"
+      total_gigabytes_used:
+        type: "integer"
+        example: 10
+        description: "//definitions"
+  volumeAttachment:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+        description: "The UUID of the attachment"
+      device:
+        type: "string"
+        example: "/dev/sda"
+        description: "The device"
+      server_id:
+        type: "string"
+        example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+        description: "The UUID of the attached server"
+      server_name:
+        type: "string"
+        example: "my server"
+        description: "The name of the attached server"
+      volume_id:
+        type: "string"
+        example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+        description: "The UUID of the volume"
+      attachment_id:
+        type: "string"
+        example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+        description: "The UUID of the attachment"
+      attached_at:
+        type: "string"
+        example: "2020-08-11T22:44:59.000000"
+        description: "The date of the attachment"
+      host_name:
+        type: "string"
+        example: "mn-compute123"
+        description: "The host name of the attached server"
+  volume:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+        description: "Id of volume"
+      size:
+        type: "integer"
+        example: 2
+        description: "The size of the volume, in gibibytes (GiB)"
+      status:
+        description: "//definitions"
+        $ref: "#/definitions/volumeStatus"
+      name:
+        type: "string"
+        example: "my volume"
+        description: "The name of the volume"
+      attachments:
+        type: "array"
+        description: "Instance attachment information"
+        items:
+          $ref: "#/definitions/volumeAttachment"
+      created_at:
+        type: "string"
+        description: "The date that the resource is created"
+      description:
+        type: "string"
+        description: "The volume description"
+      volume_type_name:
+        type: "string"
+        example: "__DEFAULT__"
+        description: "The associated volume type for the volume"
+      snapshot_id:
+        type: "string"
+        example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+        description: "The snapshot UUID that the volume is created from if any"
+      source_volume_id:
+        type: "string"
+        example: "5dd22ca4-01c9-4t69-96f0-805df4486690"
+        description: "The UUID of the source volume if any"
+      bootable:
+        type: "boolean"
+        example: false
+        description: "Whether the volume is bootable"
+      tags:
+        type: "array"
+        description: "list of volume tags"
+        items:
+          $ref: "#/definitions/tag"
+  network:
+    type: "object"
+    properties:
+      admin_state_up:
+        type: "boolean"
+        example: true
+        description: "Administrative state of network"
+      availability_zone_hints:
+        type: "array"
+        description: "The availability zone candidate for the network"
+        items:
+          type: "string"
+      availability_zones:
+        type: "array"
+        description: "The availability zone for the network"
+        items:
+          type: "string"
+      created_at:
+        type: "string"
+        example: "2019-12-24T02:06:36Z"
+        description: ""
+      description:
+        type: "string"
+        description: "Network description"
+      id:
+        type: "string"
+        example: "19e35d2f-7ed4-4be5-acb5-82d2728809c2"
+        description: "Network UUID"
+      ipv4_address_scope:
+        type: "string"
+        description: "The ID of the IPv4 address scope that the network is associated\
+          \ with"
+      ipv6_address_scope:
+        type: "string"
+        description: "The ID of the IPv6 address scope that the network is associated\
+          \ with"
+      mtu:
+        type: "integer"
+        example: 1500
+        description: "The maximum transmission unit (MTU) value to address fragmentation.\
+          \ Minimum value is 68 for IPv4, and 1280 for IPv6"
+      name:
+        type: "string"
+        example: "My network"
+        description: "Human-readable name of the network"
+      port_security_enabled:
+        type: "boolean"
+        example: true
+        description: "The port security status of the network"
+      qos_policy_id:
+        type: "string"
+        description: "The ID of the QoS policy associated with the network"
+      revision_number:
+        type: "integer"
+        description: "The revision number of the resource"
+      router:external:
+        type: "boolean"
+        example: false
+        description: "Indicates whether the network has an external routing facility\
+          \ that’s not managed by the networking service"
+      shared:
+        type: "boolean"
+        example: true
+        description: "Indicates whether this network is shared across all tenants"
+      status:
+        type: "string"
+        description: "The network status"
+        enum:
+        - "ACTIVE"
+        - "DOWN"
+        - "BUILD"
+        - "ERROR"
+      subnets:
+        type: "array"
+        description: "The associated subnets"
+        items:
+          $ref: "#/definitions/subnet"
+      tags:
+        type: "array"
+        description: "list of network tags"
+        items:
+          $ref: "#/definitions/tag"
+      tenant_id:
+        type: "string"
+        example: "875f85e0a7d3411eb0957f8fd099216c"
+        description: "The ID of the project"
+      updated_at:
+        type: "string"
+        example: "2016-03-08T20:19:41"
+        description: "Time at which the resource has been updated "
+      dhcp_ip:
+        type: "string"
+        description: "The IP of dhcp server if any"
+  subnet:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "875f85e0a7d3411eb0957f8fd099216c"
+        description: "The ID of the subnet"
+      name:
+        type: "string"
+        example: "subnet9"
+        description: "Human-readable name of the resource"
+      enable_dhcp:
+        type: "boolean"
+        example: true
+        description: "Indicates whether dhcp is enabled or disabled for the subnet"
+      network_id:
+        type: "string"
+        example: "875f85e0a7d3411eb0957f8fd099216c"
+        description: "The ID of the network to which the subnet belongs"
+      dns_nameservers:
+        type: "array"
+        description: "List of dns name servers associated with the subnet"
+        items:
+          type: "string"
+          example: "8.8.8.8"
+      allocation_pools:
+        type: "array"
+        description: "Allocation pools with start and end IP addresses for this subnet"
+        items:
+          $ref: "#/definitions/ipAllocationPool"
+      host_routes:
+        type: "array"
+        description: "Additional routes for the subnet"
+        items:
+          $ref: "#/definitions/hostRoute"
+      ip_version:
+        type: "integer"
+        example: 4
+        description: "The IP protocol version. Value is 4 or 6"
+      gateway_ip:
+        type: "string"
+        example: "185.239.106.1"
+        description: "Gateway IP of this subnet. If the value is null that implies\
+          \ no gateway is associated with the subnet"
+      cidr:
+        type: "string"
+        example: "185.239.106.0/23"
+        description: "The CIDR of the subnet"
+      tenant_id:
+        type: "string"
+        example: "875f85e0a7d3411eb0957f8fd099216c"
+        description: "The ID of the project"
+      links:
+        type: "array"
+        description: "The links associated with the subnet"
+        items:
+          type: "string"
+      service_types:
+        type: "array"
+        description: "The service types associated with the subnet"
+        items:
+          type: "string"
+      description:
+        type: "string"
+        example: "some descripiton"
+        description: "The subnet description"
+      tags:
+        type: "array"
+        description: "The list of tags on the resource"
+        items:
+          type: "string"
+      created_at:
+        type: "string"
+        example: "2019-07-17T11:46:36Z"
+        description: "Time at which the resource has been created"
+      updated_at:
+        type: "string"
+        example: "2019-07-17T11:46:36Z"
+        description: "Time at which the resource has been updated"
+      ipv6_ra_mode:
+        type: "string"
+        example: "slaac"
+        description: "The IPv6 router advertisement specifies whether the networking\
+          \ service should transmit ICMPv6 packets, for a subnet. Value is slaac,\
+          \ dhcpv6-stateful, dhcpv6-stateless or null"
+      revision_number:
+        type: "integer"
+        example: 4
+        description: "The revision number of the resource"
+      ipv6_address_mode:
+        type: "string"
+        example: "slaac"
+        description: "The IPv6 address modes specifies mechanisms for assigning IP\
+          \ addresses. Value is slaac, dhcpv6-stateful, dhcpv6-stateless or null"
+      project_id:
+        type: "string"
+        example: "875f85e0a7d3411eb0957f8fd099216c"
+        description: "The ID of the project"
+      subnetpool_id:
+        type: "string"
+        example: "875f85e0a7d3411eb0957f8fd099216c"
+        description: "The ID of the subnet pool associated with the subnet"
+      servers:
+        type: "array"
+        description: "The servers in this subnet"
+        items:
+          type: "string"
+  ipAllocationPool:
+    type: "object"
+    properties:
+      start:
+        type: "string"
+        description: "//definitions"
+      end:
+        type: "string"
+        description: "//definitions"
+  hostRoute:
+    type: "object"
+    properties:
+      destination:
+        type: "string"
+        description: "//definitions"
+      nexthop:
+        type: "string"
+        description: "//definitions"
+  imgListDistribution:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "CentOS"
+        description: "The name of the distribution"
+      images:
+        type: "array"
+        description: "The list of availabel distributions"
+        items:
+          $ref: "#/definitions/distribution"
+  imageStatus:
+    type: "string"
+    description: "The status of the image"
+    example: "active"
+    enum:
+    - "queued"
+    - "saving"
+    - "uploading"
+    - "importing"
+    - "active"
+    - "deactivated"
+    - "killed"
+    - "deleted"
+    - "pending_delete"
+  imageDiskFormat:
+    type: "string"
+    description: "The disk format of an image"
+    example: "iso"
+    enum:
+    - "raw"
+    - "vhd"
+    - "vhdx"
+    - "vmdk"
+    - "vdi"
+    - "iso"
+    - "ploop"
+    - "qcow2"
+    - "aki"
+    - "ari"
+    - "ami"
+  imageContainerFormat:
+    type: "string"
+    description: "The container format refers to whether the virtual machine image\
+      \ is in a file format that also contains metadata about the actual virtual machine"
+    example: "bare"
+    enum:
+    - "bare"
+    - "ovf"
+    - "aki"
+    - "ari"
+    - "ami"
+    - "ova"
+    - "docker"
+    - "compressed"
+  serverSnapshot:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "f5a36517-d801-4171-a6bc-f8f136c540ce"
+        description: "The UUID of the snapshot"
+      status:
+        description: "//definitions"
+        $ref: "#/definitions/imageStatus"
+      name:
+        type: "string"
+        example: "test"
+        description: "The human readable name of the snapshot"
+      min_ram:
+        type: "integer"
+        example: 0
+        description: "//definitions"
+      min_disk:
+        type: "integer"
+        example: 15
+        description: "//definitions"
+      disk_format:
+        description: "//definitions"
+        $ref: "#/definitions/imageDiskFormat"
+      size:
+        type: "integer"
+        example: 16106127360
+        description: "The size of the snapshot in bytes"
+      real_size:
+        type: "integer"
+        example: 16106127360
+        description: "The real size of the snapshot in bytes"
+      checksum:
+        type: "string"
+        description: "The checksum of the image"
+      created_at:
+        type: "string"
+        example: "2020-08-12T13:40:16Z"
+        description: "The creration date of the snapshot"
+      container_format:
+        description: "//definitions"
+        $ref: "#/definitions/imageContainerFormat"
+      tags:
+        type: "array"
+        description: "The associated tags with this resource"
+        items:
+          type: "string"
+      abrak:
+        type: "string"
+        example: "my server"
+        description: "The server name that this snapshot belongs to"
+      image_type:
+        type: "string"
+        description: "//definitions"
+  marketPlaceItem:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        example: "marketplace"
+        description: "The type of the item"
+      id:
+        type: "string"
+        example: "86340aa1-9fae-40a6-9cb1-5d801772502a"
+        description: "The UUID of the item"
+      name:
+        type: "string"
+        example: "Zookeeper"
+        description: "The name of the item"
+      distrubation_name:
+        type: "string"
+        example: "CentOS"
+        description: "The name of the distribution"
+      os_description:
+        type: "string"
+        description: "The description of the os if any"
+      base_os_distro:
+        type: "string"
+        example: "Debian"
+        description: "The distribution base operating system"
+      base_os_version:
+        type: "string"
+        description: "The version of the base operating system"
+      disk:
+        type: "integer"
+        example: 12
+        description: "The required disk space"
+      ram:
+        type: "integer"
+        example: 1
+        description: "The required memory"
+      ssh_key:
+        type: "string"
+        description: "The ssh key if any"
+      ssh_password:
+        type: "string"
+        description: "The ssh password if any"
+      genre_id:
+        type: "string"
+        description: "The id of the genre this item is associated with"
+      genre_name:
+        type: "string"
+        description: "The name of the genre this item is associated with"
+      partner_id:
+        type: "string"
+        description: "The id of the partner this item is associated with"
+      partner_name:
+        type: "string"
+        description: "The name of the partner this item is associated with"
+      image_id:
+        type: "string"
+        description: "The id of the image this item is associated with"
+      image_name:
+        type: "string"
+        description: "The name of the image this item is associated with"
+      image_version:
+        type: "string"
+        description: "The version of the image this item is associated with"
+      image_build_number:
+        type: "string"
+        description: "The build number of the image this item is associated with"
+      image_latest_update:
+        type: "string"
+        description: "The latest update of the image this item is associated with"
+      image_size:
+        type: "integer"
+        description: "The size of the image this item is associated with"
+  floatIP:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "367cf092-af36-4603-b794-b5e72eae4ed4"
+        description: "The ID of the floating IP address"
+      status:
+        type: "string"
+        example: "ACTIVE"
+        description: "The status of the floating ip"
+        enum:
+        - "ACTIVE"
+        - "DOWN"
+        - "ERROR"
+      floating_network_id:
+        type: "string"
+        example: "367cf092-af36-4603-b794-b5e72eae4ed4"
+        description: "The ID of the network associated with the floating IP"
+      router_id:
+        type: "string"
+        example: "367cf092-af36-4603-b794-b5e72eae4ed4"
+        description: "The ID of the router for the floating IP"
+      fixed_ip_address:
+        type: "string"
+        description: "The fixed IP address that is associated with the floating IP\
+          \ address"
+      floating_ip_address:
+        type: "string"
+        example: "172.24.4.228"
+        description: "The floting IP address"
+      port_id:
+        type: "string"
+        example: "367cf092-af36-4603-b794-b5e72eae4ed4"
+        description: "The ID of a port associated with the floating IP"
+      description:
+        type: "string"
+        description: "A human-readable description for the resource"
+      created_at:
+        type: "string"
+        example: "2016-12-21T10:55:50Z"
+        description: "Time at which the resource has been created"
+      updated_at:
+        type: "string"
+        example: "2016-12-21T10:55:50Z"
+        description: "Time at which the resource has been updated"
+      revision_number:
+        type: "integer"
+        example: 1
+        description: "The revision number of the resource"
+      server:
+        description: "The server to which this floating IP is associated"
+        $ref: "#/definitions/server"
+      tags:
+        type: "array"
+        description: "List of float ip tags"
+        items:
+          $ref: "#/definitions/tag"
+  serverAction:
+    type: "object"
+    properties:
+      action:
+        type: "string"
+        example: "createImage"
+        description: "Action name"
+      message:
+        type: "string"
+        example: "Error"
+        description: "Action message if any"
+      start_time:
+        type: "string"
+        example: "2020-08-12T13:40:15.000000"
+        description: "//definitions"
+  tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        description: "Tag ID"
+      name:
+        type: "string"
+        description: "Tag name"
+parameters:
+  Accept-Language:
+    name: "Accept-Language"
+    in: "header"
+    description: ""
+    required: false
+    type: "string"
+    enum:
+    - "en"
+    - "fa"
+responses:
+  successResponse:
+    description: "Success response"
+    schema:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+          description: "//responses"
+        data:
+          type: "object"
+          description: "//responses"
+          properties: {}
+  dataResponse:
+    description: "Data response"
+    schema:
+      type: "object"
+      properties:
+        data:
+          description: "//responses"
+  messageResponse:
+    description: "Message response"
+    schema:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+          description: "//responses"
+  error:
+    description: "Error"
+    schema:
+      properties:
+        message:
+          type: "string"
+          description: "//responses"
+        data:
+          type: "array"
+          description: "//responses"
+          items:
+            type: "string"
+  errorResponse:
+    description: "Error"
+    schema:
+      properties:
+        message:
+          type: "string"
+          description: "//responses"
+        errors:
+          type: "array"
+          description: "//responses"
+          items:
+            type: "string"
+  validationError:
+    description: "Validation error"
+    schema:
+      properties:
+        message:
+          type: "string"
+          description: "//responses"
+        errors:
+          type: "object"
+          description: "//responses"
+          properties:
+            fieldName:
+              type: "array"
+              description: "//responses"
+              items:
+                type: "string"
